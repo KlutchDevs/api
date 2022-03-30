@@ -7,6 +7,6 @@ const app = express(); //create app object
 instruct our application to send a response of 
 “Hello World” when a user accesses the root URL (/). */
 
-app.get('/', (req, res) => res.send('Hello World'));
+app.get('/', (req, res) => res.send("Hello World, I'm Just Getting Started. -Klutch"));
 //instruct app to run on specific port
 app.listen(4000, () => console.log("Antonio's Listening on port 4000!"));
