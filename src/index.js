@@ -3,14 +3,32 @@
 // This is the main entry point of our application
 const express = require('express'); //dependencies
 const {ApolloServer, gql} = require('apollo-server-express'); //imports apollo-server-express package
+require('dotenv').config(); //import configuration
+
+const db = require('./db');   //import db.js file from src directory
 
 //Run the server on aport specified in our .env file or port 4000
 const port = process.env.PORT || 4000;
 
+//Store the DB_HOST value as a variable
+const DB_HOST = process.env.DB_HOST;
+
 let notes = [
-  {id: '1', content: 'This is a note', author: 'Adam Scott'},
-  {id: '2', content: 'This is another note', author: 'Harlow Everly'},
-  {id: '3', content: 'Oh hey look, another note!', author: 'Riley Harrison'}
+  {
+    id: '1', 
+    content: 'This is a note', 
+    author: 'Adam Scott'
+  },
+  {
+    id: '2', 
+    content: 'This is another note', 
+    author: 'Harlow Everly'
+  },
+  {
+    id: '3', 
+    content: 'Oh hey look, another note!', 
+    author: 'Riley Harrison'
+  }
 ];
 
 //Construct a schema, using GraphQL's schema language
@@ -19,19 +37,19 @@ let notes = [
  //note query that takes required args, returns matching Note
 const typeDefs = gql`
   type Note {
-    id: ID!
-    content: String!
-    author: String!
+    id: ID
+    content: String
+    author: String
   }
   
   type Query {
     hello: String
-    notes: [Note!]!
-    note(id: ID!): Note!
+    notes: [Note]
+    note(id: ID): Note
   }
   
   type Mutation {
-    newNote(content: String!): Note!
+    newNote(content: String!): Note
   }
 `;
 
