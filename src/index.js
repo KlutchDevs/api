@@ -80,6 +80,9 @@ const resolvers = {
 
 const app = express(); //create app object w/ Express server
 
+//Connect to the database
+db.connect(DB_HOST);
+
 //Apollo Server setup
 const server = new ApolloServer({ typeDefs, resolvers});
 
