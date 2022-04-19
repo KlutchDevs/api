@@ -1,11 +1,12 @@
 // index.js
-//npm run dev
+//npm run dev - run app from cli
 // This is the main entry point of our application
 const express = require('express'); //dependencies
 const {ApolloServer, gql} = require('apollo-server-express'); //imports apollo-server-express package
 require('dotenv').config(); //import configuration
 
 const db = require('./db');   //import db.js file from src directory
+const models = require('./models'); //import all app models 
 
 //Run the server on aport specified in our .env file or port 4000
 const port = process.env.PORT || 4000;
@@ -58,7 +59,10 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     hello: () => 'Hello world!',
-    notes: () => notes,
+    //notes: () => notes, //saves notes in memory, replace with db read & write
+    notes: async () => {
+      return await models.Note.find(); //may not need await keyword -called redundant by editor-
+    },
     note: (parent, args) => {
       return notes.find(note => note.id === args.id); //return matching note
     }
