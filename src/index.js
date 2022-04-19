@@ -14,6 +14,7 @@ const port = process.env.PORT || 4000;
 //Store the DB_HOST value as a variable
 const DB_HOST = process.env.DB_HOST;
 
+/* //dummy data 
 let notes = [
   {
     id: '1', 
@@ -30,7 +31,7 @@ let notes = [
     content: 'Oh hey look, another note!', 
     author: 'Riley Harrison'
   }
-];
+]; */
 
 //Construct a schema, using GraphQL's schema language
 //schema values arent separated by commas (i.e. attributes)
@@ -61,23 +62,36 @@ const resolvers = {
     hello: () => 'Hello world!',
     //notes: () => notes, //saves notes in memory, replace with db read & write
     notes: async () => {
-      return await models.Note.find(); //may not need await keyword -called redundant by editor-
+      return await models.Note.find(); //return all notes
     },
+    note: async (parent, args) => {
+      return await models.Note.findById(args.id); //return specific note by id 
+    }
+    /* //re-wrote to pull specific note from database
     note: (parent, args) => {
       return notes.find(note => note.id === args.id); //return matching note
-    }
+    } */
   },
   //resolver to add new note to API. 
   //takes in the note content as an argument, stores it as object, and adds it to memory in notes array
   Mutation: { 
-    newNote: (parent, args) => {
-      let noteValue = {
-        id: String(notes.length + 1),
+    newNote: async (parent, args) => {
+      return await models.Note.create({
         content: args.content,
         author: 'Adam Scott'
-      };
-      notes.push(noteValue);
-      return noteValue;
+      });
+
+    /*  //this mutation saves new note to memory. Replaced by db storage
+
+    newNote: (parent, args) => {
+    let noteValue = {
+      id: String(notes.length + 1),
+      content: args.content,
+      author: 'Adam Scott'
+    };
+    notes.push(noteValue);
+    return noteValue;
+    */
     }
   }
 };
