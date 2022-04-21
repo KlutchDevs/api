@@ -1,119 +1,33 @@
-// index.js
-//npm run dev - run app from cli
-// This is the main entry point of our application
-const express = require('express'); //dependencies
-const {ApolloServer, gql} = require('apollo-server-express'); //imports apollo-server-express package
+const express = require('express');                     //dependencies
+const {ApolloServer} = require('apollo-server-express'); //imports apollo-server-express package
 require('dotenv').config(); //import configuration
 
+//Local module imports
 const db = require('./db');   //import db.js file from src directory
 const models = require('./models'); //import all app models 
+const typeDefs = require('./schema');
+const resolvers = require('./resolvers'); //import resolver code
 
 //Run the server on aport specified in our .env file or port 4000
 const port = process.env.PORT || 4000;
-
-//Store the DB_HOST value as a variable
-const DB_HOST = process.env.DB_HOST;
-
-/* //dummy data 
-let notes = [
-  {
-    id: '1', 
-    content: 'This is a note', 
-    author: 'Adam Scott'
-  },
-  {
-    id: '2', 
-    content: 'This is another note', 
-    author: 'Harlow Everly'
-  },
-  {
-    id: '3', 
-    content: 'Oh hey look, another note!', 
-    author: 'Riley Harrison'
-  }
-]; */
-
-//Construct a schema, using GraphQL's schema language
-//schema values arent separated by commas (i.e. attributes)
-
- //note query that takes required args, returns matching Note
-const typeDefs = gql`
-  type Note {
-    id: ID
-    content: String
-    author: String
-  }
-  
-  type Query {
-    hello: String
-    notes: [Note]
-    note(id: ID): Note
-  }
-  
-  type Mutation {
-    newNote(content: String!): Note
-  }
-`;
-
-//Provide resolver functions for our schema fields
-//Resolver functions ARE separated by commas
-const resolvers = {
-  Query: {
-    hello: () => 'Hello world!',
-    //notes: () => notes, //saves notes in memory, replace with db read & write
-    notes: async () => {
-      return await models.Note.find(); //return all notes
-    },
-    note: async (parent, args) => {
-      return await models.Note.findById(args.id); //return specific note by id 
-    }
-    /* //re-wrote to pull specific note from database
-    note: (parent, args) => {
-      return notes.find(note => note.id === args.id); //return matching note
-    } */
-  },
-  //resolver to add new note to API. 
-  //takes in the note content as an argument, stores it as object, and adds it to memory in notes array
-  Mutation: { 
-    newNote: async (parent, args) => {
-      return await models.Note.create({
-        content: args.content,
-        author: 'Adam Scott'
-      });
-
-    /*  //this mutation saves new note to memory. Replaced by db storage
-
-    newNote: (parent, args) => {
-    let noteValue = {
-      id: String(notes.length + 1),
-      content: args.content,
-      author: 'Adam Scott'
-    };
-    notes.push(noteValue);
-    return noteValue;
-    */
-    }
-  }
-};
+const DB_HOST = process.env.DB_HOST;  ////Store the DB_HOST value as a variable
 
 const app = express(); //create app object w/ Express server
 
-//Connect to the database
-db.connect(DB_HOST);
+db.connect(DB_HOST); //Connect to the database
 
 //Apollo Server setup
-const server = new ApolloServer({ typeDefs, resolvers});
+const server = new ApolloServer({ 
+  typeDefs, 
+  resolvers,
+  context: () => {
+    //Add the db models to the context
+    return { models };
+  }
+});
 
 //Apply the Apollo GraphQL middleware and set the path to /api
 server.applyMiddleware({ app, path: '/api'});
-
-/* prior response method
-  We then use the app object’s get method to
-  instruct our application to send a response of 
-  “Hello World” when a user accesses the root URL (/). 
-  
-  app.get('/', (req, res) => res.send("Lets see if nodemon is working. -Klutch")); */
-//instruct app to run on specific port
 
 app.listen({port}, () => 
     console.log(
