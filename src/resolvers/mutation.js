@@ -6,17 +6,28 @@ module.exports = {
       content: args.content,
       author: 'Adam Scott'
     });
-
-  /*  //this mutation saves new note to memory. We're using db storage instead
-
-  newNote: (parent, args) => {
-  let noteValue = {
-    id: String(notes.length + 1),
-    content: args.content,
-    author: 'Adam Scott'
-  };
-  notes.push(noteValue);
-  return noteValue;
-  */
+  },
+  deleteNote: async (parent, {id}, {models}) => {
+    try {
+      await models.Note.findOneAndRemove({_id: id});
+      return true;
+    } catch (err) {
+      return false;
+    }
+  },
+  updateNote: async (parent, {content, id}, {models}) => {
+    return await models.Note.findOneAndUpdate(
+      {
+        _id: id,
+      },
+      {
+        $set: {
+          content 
+        }
+      },
+      {
+        new: true
+      }
+    );
   }
 }

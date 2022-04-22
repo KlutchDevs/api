@@ -3,11 +3,17 @@
 
  //declare GraphQL schema(const typeDefs = gql`), and then list schema keynames and values
 
-const typeDefs = gql`   
+
+ //const typeDefs = gql`  //replaced in ch6 
+ module.exports = gql`
+  scalar DateTime
+
   type Note {
     id: ID!
     content: String!
     author: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
   }
   
   type Query {
@@ -17,5 +23,7 @@ const typeDefs = gql`
   
   type Mutation {
     newNote(content: String!): Note
+    updateNote(id: ID!, content: String!): Note!
+    delteNote(id: ID!): Boolean! 
   }
 `;
