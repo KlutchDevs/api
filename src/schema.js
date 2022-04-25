@@ -1,4 +1,4 @@
-//Construct a schema, using GraphQL's schema language
+//Our GraphQL schema 
 //schema values arent separated by commas (i.e. attributes)
 
  //declare GraphQL schema, and then list schema keynames and values
@@ -11,9 +11,17 @@
   type Note {
     id: ID!
     content: String!
-    author: String!
+    author: User!
     createdAt: DateTime!
     updatedAt: DateTime!
+  }
+
+  type User {
+    id: ID!
+    username: String!
+    email: String!
+    avatar: String
+    notes: [Note!]!
   }
   
   type Query {
@@ -24,6 +32,8 @@
   type Mutation {
     newNote(content: String!): Note
     updateNote(id: ID!, content: String!): Note!
-    delteNote(id: ID!): Boolean! 
+    deleteNote(id: ID!): Boolean! 
+    signUp(username: String!, email: String!, password: String!): String!
+    signIn(username: String, email: String, password: String!): String!
   }
 `;
