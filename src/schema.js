@@ -5,6 +5,7 @@
 
 
  //const typeDefs = gql`  //replaced in ch6 
+ //DateTime is a custom scalar type we'll use to track date and time of note changes & additions
  module.exports = gql`
   scalar DateTime
 

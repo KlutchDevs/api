@@ -3,7 +3,7 @@
 const Query = require('./query');
 const Mutation = require('./mutation');
 //use the graphql-iso-date package to validate requests w/ DateTime
-const { GraphQLDate } = require('graphql-iso-date');
+const { GraphQLDateTime } = require('graphql-iso-date');
 
 module.exports = {
   Query,
