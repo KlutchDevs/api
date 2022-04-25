@@ -1,10 +1,9 @@
 //Construct a schema, using GraphQL's schema language
 //schema values arent separated by commas (i.e. attributes)
 
- //declare GraphQL schema(const typeDefs = gql`), and then list schema keynames and values
+ //declare GraphQL schema, and then list schema keynames and values
+ const {gql} = require('apollo-server-express');
 
-
- //const typeDefs = gql`  //replaced in ch6 
  //DateTime is a custom scalar type we'll use to track date and time of note changes & additions
  module.exports = gql`
   scalar DateTime
