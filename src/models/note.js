@@ -8,8 +8,11 @@ const noteSchema = new mongoose.Schema(
       type: String,
       required: true
     },
+    //apply cross-referencing to the data in our db
+    //now all new notes will accurately record and cross-ref the author from the context of the request
     author: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
       required: true
     }
   },

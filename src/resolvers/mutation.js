@@ -1,6 +1,7 @@
 //the following packages give user authentication capabilities 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const {
   AuthenticationError,
   ForbiddenError
@@ -56,10 +57,17 @@ module.exports = {
     //create and return the json web token
     return jwt.sign({ id: user._id }, process.env.JWT_SECRET);
   },
-  newNote: async (parent, args, {models}) => {
+  //add the users context
+  newNote: async (parent, args, {models, user}) => {
+    //if there is no user on the context, throw an authentication error
+    if (!user) {
+      throw new AuthenticationError('You must be signed in to create a note');
+    }
+
     return await models.Note.create({
       content: args.content,
-      author: 'Adam Scott'
+      //reference the author's mongo id
+      author: mongoose.Types.ObjectId(user.id)
     });
   },
   deleteNote: async (parent, {id}, {models}) => {
