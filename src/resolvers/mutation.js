@@ -1,6 +1,6 @@
 //the following packages give user authentication capabilities 
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken'); //client sends request(Payload) with an HTTP Header named Authorization
 const mongoose = require('mongoose');
 const {
   AuthenticationError,
@@ -16,7 +16,7 @@ module.exports = {
     email = email.trim().toLowerCase();
     //hash the password
     const hashed = await bcrypt.hash(password, 10);
-    //create the gravatar url
+    //create the gravatar url (globall recognized avatar)
     const avatar = gravatar(email);
     try {
       const user = await models.User.create({
@@ -27,6 +27,7 @@ module.exports = {
       });
 
       //create and return the json web token
+      //JWT_SECRET will read the token from the HTTP Header, decode it
       return jwt.sign({id: user._id}, process.env.JWT_SECRET);
     } catch (err) {
       console.log(err);
