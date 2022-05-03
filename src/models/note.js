@@ -9,12 +9,24 @@ const noteSchema = new mongoose.Schema(
       required: true
     },
     //apply cross-referencing to the data in our db
-    //now all new notes will accurately record and cross-ref the author from the context of the request
+    //now all new notes will accurately record and cross-reference the author from the context of the request
     author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true
-    }
+    },
+    //add the favoriteCount property
+    favoriteCount: {
+      type: Number,
+      default: 0
+    },
+    //add the favoritedBy property
+    favoritedBy: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      }
+    ]
   },
   {
     //Assigns createdAt and updatedAt fields with a Date type
