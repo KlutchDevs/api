@@ -1,4 +1,5 @@
-const helmet = require('helmet'); //helmet middleware for web best practices/security
+const cors = require('cors');
+const helmet = require('helmet'); //helmet middleware for web best practices/security/HTTP Header formatting 
 const express = require('express');                     //dependencies
 const {ApolloServer} = require('apollo-server-express'); //imports apollo-server-express package
 const jwt = require('jsonwebtoken'); //user authentication 
@@ -16,6 +17,7 @@ const DB_HOST = process.env.DB_HOST;  ////Store the DB_HOST value as a variable
 
 const app = express(); //create app object w/ Express server
 app.use(helmet());  //add helmet middleware to express app
+app.use(cors());  //have app use Cross-Origin Resource Sharing 
 
 db.connect(DB_HOST); //Connect to the database
 
