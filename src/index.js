@@ -1,3 +1,5 @@
+const depthLimit = require('graphql-depth-limit');
+const { createComplexityLimitRule } = require('graphql-validation-complexity');
 const cors = require('cors');
 const helmet = require('helmet'); //helmet middleware for web best practices/security/HTTP Header formatting 
 const express = require('express');                     //dependencies
@@ -38,12 +40,13 @@ const getUser = token => {
 const server = new ApolloServer({ 
   typeDefs, 
   resolvers,
+  validationRules: [depthLimit(5), createComplexityLimitRule(1000)],
   context: ({ req }) => {
     //get the user token from the headers
     const token = req.headers.authorization;
     //try to retrieve a user with the token
     const user = getUser(token);
-    //for now, let's log the user to the console:
+    //for now, let's log the user to the console: TAKE AWAY LATER
     console.log(user);
     //Add the db models and the user to the context
     return { models, user };
